@@ -1,0 +1,45 @@
+# ROS 2 build files
+build/
+install/
+log/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python packaging
+*.egg-info/
+.eggs/
+dist/
+
+# IDE
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# ROS / colcon
+.colcon/
+.colcon_ignore
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# Python test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
