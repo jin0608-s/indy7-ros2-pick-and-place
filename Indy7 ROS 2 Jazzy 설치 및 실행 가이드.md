@@ -468,7 +468,7 @@ git push
 설치가 완료된 Indy7 workspace는 다음과 같은 구조를 갖습니다.
 
 ```text
-~/temp/indy_ws
+~/temp/indy
 │
 ├── src
 │   └── indy-ros2
