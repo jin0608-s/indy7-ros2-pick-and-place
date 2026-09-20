@@ -4,7 +4,7 @@ Neuromeka의 **Indy7** 협동로봇을 Ubuntu 24.04 + ROS 2 Jazzy 환경에서 �
 
 ---
 
-## 1. 개발 환경
+# 1. 개발 환경
 
 | 항목              | 버전              |
 | --------------- | --------------- |
@@ -22,18 +22,21 @@ Neuromeka의 **Indy7** 협동로봇을 Ubuntu 24.04 + ROS 2 Jazzy 환경에서 �
 
 기존 ROS 프로젝트와 분리하여 Indy7 전용 workspace를 생성합니다.
 
+Indy7 프로젝트의 최상위 workspace는 `~/temp/indy`입니다.
+
 ```bash
 cd ~/temp
 
-mkdir -p indy_ws/src
+mkdir -p indy/src
 
-cd ~/temp/indy_ws/src
+cd ~/temp/indy/src
 ```
 
 최종적인 workspace 구조는 다음과 같습니다.
 
 ```text
-~/temp/indy_ws/
+~/temp/indy/
+
 ├── src/
 │   └── indy-ros2/
 ├── build/
@@ -42,6 +45,8 @@ cd ~/temp/indy_ws/src
 └── .venv/
 ```
 
+> `build/`, `install/`, `log/`, `.venv/`는 빌드 및 실행 과정에서 생성되는 디렉터리이며 Git에는 포함하지 않습니다.
+
 ---
 
 # 3. Neuromeka Indy ROS 2 다운로드
@@ -49,7 +54,7 @@ cd ~/temp/indy_ws/src
 Neuromeka의 `indy-ros2` 저장소에서 Jazzy용 브랜치를 clone합니다.
 
 ```bash
-cd ~/temp/indy_ws/src
+cd ~/temp/indy/src
 
 git clone -b jazzy-indyDCP3 https://github.com/neuromeka-robotics/indy-ros2.git
 ```
@@ -132,19 +137,17 @@ echo 'export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-설정이 적용되었는지 확인할 수 있습니다.
+설정이 적용되었는지 확인합니다.
 
 ```bash
 echo $RMW_IMPLEMENTATION
 ```
 
-정상적으로 설정되었다면:
+정상적으로 설정되었다면 다음과 같이 출력됩니다.
 
 ```text
 rmw_cyclonedds_cpp
 ```
-
-가 출력됩니다.
 
 ---
 
@@ -155,7 +158,7 @@ Indy ROS 2에서 사용하는 Python 패키지를 별도의 가상환경에서 �
 ## 6.1 가상환경 생성
 
 ```bash
-cd ~/temp/indy_ws
+cd ~/temp/indy
 
 python3 -m venv .venv
 ```
@@ -163,13 +166,13 @@ python3 -m venv .venv
 ## 6.2 가상환경 활성화
 
 ```bash
-source .venv/bin/activate
+source ~/temp/indy/.venv/bin/activate
 ```
 
 터미널 앞에 다음과 같이 `(.venv)`가 표시되면 정상입니다.
 
 ```text
-(.venv) user@ubuntu:~/temp/indy_ws$
+(.venv) user@ubuntu:~/temp/indy$
 ```
 
 ## 6.3 Python 패키지 설치
@@ -205,7 +208,7 @@ source /opt/ros/jazzy/setup.bash
 workspace로 이동합니다.
 
 ```bash
-cd ~/temp/indy_ws
+cd ~/temp/indy
 ```
 
 Indy ROS 2 패키지의 의존성을 설치합니다.
@@ -223,7 +226,7 @@ rosdep install --from-paths src --ignore-src -r -y
 workspace의 루트 디렉터리에서 빌드합니다.
 
 ```bash
-cd ~/temp/indy_ws
+cd ~/temp/indy
 
 colcon build
 ```
@@ -231,7 +234,8 @@ colcon build
 빌드가 완료되면 `build`, `install`, `log` 디렉터리가 생성됩니다.
 
 ```text
-indy_ws/
+~/temp/indy/
+
 ├── src/
 │   └── indy-ros2/
 ├── build/
@@ -247,7 +251,7 @@ indy_ws/
 빌드한 Indy7 패키지를 현재 터미널에 적용합니다.
 
 ```bash
-source ~/temp/indy_ws/install/setup.bash
+source ~/temp/indy/install/setup.bash
 ```
 
 Indy 관련 패키지가 정상적으로 등록되었는지 확인합니다.
@@ -282,7 +286,7 @@ source /opt/ros/jazzy/setup.bash
 Indy workspace를 적용합니다.
 
 ```bash
-source ~/temp/indy_ws/install/setup.bash
+source ~/temp/indy/install/setup.bash
 ```
 
 Indy7 description을 실행합니다.
@@ -315,13 +319,13 @@ source /opt/ros/jazzy/setup.bash
 Indy workspace를 적용합니다.
 
 ```bash
-source ~/temp/indy_ws/install/setup.bash
+source ~/temp/indy/install/setup.bash
 ```
 
 Python 가상환경을 활성화합니다.
 
 ```bash
-source ~/temp/indy_ws/.venv/bin/activate
+source ~/temp/indy/.venv/bin/activate
 ```
 
 Gazebo를 실행합니다.
@@ -347,6 +351,10 @@ ros2 launch indy_gazebo indy_gazebo.launch.py indy_type:=indy7
 Gazebo에서 Indy7을 실행한 상태에서 MoveIt 2를 실행합니다.
 
 ```bash
+source /opt/ros/jazzy/setup.bash
+source ~/temp/indy/install/setup.bash
+source ~/temp/indy/.venv/bin/activate
+
 ros2 launch indy_moveit indy_moveit_gazebo.launch.py indy_type:=indy7
 ```
 
@@ -367,22 +375,22 @@ MoveIt 2에서는 다음 기능을 확인할 수 있습니다.
 
 처음부터 실행할 경우 다음 순서로 진행합니다.
 
-### Terminal 1 — Indy7 Gazebo
+## Terminal 1 — Indy7 Gazebo
 
 ```bash
 source /opt/ros/jazzy/setup.bash
-source ~/temp/indy_ws/install/setup.bash
-source ~/temp/indy_ws/.venv/bin/activate
+source ~/temp/indy/install/setup.bash
+source ~/temp/indy/.venv/bin/activate
 
 ros2 launch indy_gazebo indy_gazebo.launch.py indy_type:=indy7
 ```
 
-### Terminal 2 — MoveIt 2
+## Terminal 2 — MoveIt 2
 
 ```bash
 source /opt/ros/jazzy/setup.bash
-source ~/temp/indy_ws/install/setup.bash
-source ~/temp/indy_ws/.venv/bin/activate
+source ~/temp/indy/install/setup.bash
+source ~/temp/indy/.venv/bin/activate
 
 ros2 launch indy_moveit indy_moveit_gazebo.launch.py indy_type:=indy7
 ```
@@ -391,19 +399,19 @@ ros2 launch indy_moveit indy_moveit_gazebo.launch.py indy_type:=indy7
 
 # 14. 설치 확인
 
-### ROS 2 버전 확인
+## ROS 2 버전 확인
 
 ```bash
 ros2 --version
 ```
 
-### Indy 패키지 확인
+## Indy 패키지 확인
 
 ```bash
 ros2 pkg list | grep indy
 ```
 
-### RMW 확인
+## RMW 확인
 
 ```bash
 echo $RMW_IMPLEMENTATION
@@ -415,13 +423,13 @@ echo $RMW_IMPLEMENTATION
 rmw_cyclonedds_cpp
 ```
 
-### Gazebo 확인
+## Gazebo 확인
 
 ```bash
 gz sim --version
 ```
 
-### MoveIt 관련 패키지 확인
+## MoveIt 관련 패키지 확인
 
 ```bash
 ros2 pkg list | grep moveit
@@ -453,11 +461,33 @@ __pycache__/
 *.log
 ```
 
-Git 저장소에 올릴 때:
+Git 저장소의 최상위 디렉터리는 `~/temp/indy`입니다.
 
 ```bash
-git add "Indy7 ROS 2 Jazzy 설치 및 실행 가이드.md"
-git commit -m "docs: add Indy7 ROS2 Jazzy installation guide"
+cd ~/temp/indy
+```
+
+변경사항 확인:
+
+```bash
+git status
+```
+
+파일 추가:
+
+```bash
+git add .
+```
+
+커밋:
+
+```bash
+git commit -m "docs: update Indy7 workspace path"
+```
+
+GitHub에 업로드:
+
+```bash
 git push
 ```
 
@@ -468,20 +498,25 @@ git push
 설치가 완료된 Indy7 workspace는 다음과 같은 구조를 갖습니다.
 
 ```text
-~/temp/indy
+~/temp/indy/
 │
-├── src
-│   └── indy-ros2
-│       ├── indy_description
-│       ├── indy_gazebo
-│       ├── indy_moveit
+├── .git/
+├── .gitignore
+├── Indy7 ROS 2 Jazzy 설치 및 실행 가이드.md
+│
+├── src/
+│   └── indy-ros2/
+│       ├── indy_description/
+│       ├── indy_gazebo/
+│       ├── indy_moveit/
 │       └── ...
 │
-├── build
-├── install
-├── log
-│
-└── .venv
+├── build/
+├── install/
+├── log/
+└── .venv/
 ```
 
-이 workspace를 기반으로 이후 **Indy7 + Gazebo + MoveIt 2를 이용한 로봇 제어 및 경로 계획 실습**을 진행할 수 있습니다.
+`build/`, `install/`, `log/`, `.venv/`는 로컬 실행 및 빌드 과정에서 생성되며 `.gitignore`를 통해 Git에서 제외합니다.
+
+이 `~/temp/indy` workspace를 기반으로 이후 **Indy7 + Gazebo + MoveIt 2를 이용한 로봇 제어 및 경로 계획 실습**을 진행할 수 있습니다.
