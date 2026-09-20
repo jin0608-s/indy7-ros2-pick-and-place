@@ -13,8 +13,6 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='boyfriend51',
-    maintainer_email='luckymijin0608@gmail.com',
     description='TODO: Package description',
     license='TODO: License declaration',
     extras_require={

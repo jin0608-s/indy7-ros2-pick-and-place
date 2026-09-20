@@ -4,7 +4,6 @@
   <name>indy_pick_place</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="luckymijin0608@gmail.com">boyfriend51</maintainer>
   <license>TODO: License declaration</license>
 
   <depend>rclpy</depend>
